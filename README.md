@@ -147,8 +147,12 @@ Essas funcionalidades poderão ser avaliadas em versões futuras.
 | `cupertino_icons` | Ícones |
 | `flutter_test` | Testes automatizados |
 | `flutter_lints` | Análise estática e boas práticas |
+| `signals` | Gerenciamento reativo de estado |
+| `signals_flutter` | Integração dos Signals com widgets Flutter |
 
-O gerenciamento de estado com Signals está definido para a arquitetura do frontend, mas sua integração ainda está pendente.
+Os pacotes `signals` e `signals_flutter` foram adicionados ao projeto, mas o gerenciamento reativo ainda não foi implementado. Os componentes de backend, banco de dados, REST e WebSocket também não estão implementados neste estágio.
+
+Os pacotes Signals já estão adicionados ao projeto. A implementação do gerenciamento reativo de estado e sua integração com os widgets ainda estão pendentes.
 
 ### Arquitetura planejada
 
@@ -162,8 +166,6 @@ O gerenciamento de estado com Signals está definido para a arquitetura do front
 | Atualização em tempo real | WebSocket | Sincronização das informações da fila |
 | Plataforma inicial | Android | Execução da aplicação móvel |
 | Compatibilidade futura | iOS | Possível expansão da aplicação |
-
-Os componentes de backend, banco de dados, Signals, REST e WebSocket ainda não estão implementados neste estágio.
 
 ## Arquitetura conceitual
 
