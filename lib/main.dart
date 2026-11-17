@@ -1,3 +1,4 @@
+import 'package:fila_atendimento/features/counter/counter_page.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -31,27 +32,7 @@ class FilaAtendimentoApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigo),
         useMaterial3: true,
       ),
-      home: const HomePage(),
-    );
-  }
-}
-
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(title: const Text('Fila de Atendimento')),
-      body: const Center(
-        child: Text('Aplicativo em desenvolvimento'),
-      ),
+      home: const CounterPage(),
     );
   }
 }

@@ -8,9 +8,13 @@ O objetivo é oferecer uma solução simples para clientes entrarem em uma fila 
 
 **Em desenvolvimento — MVP com frontend Flutter em fase inicial.**
 
-Atualmente, o projeto possui a estrutura inicial de um aplicativo Flutter, uma tela de apresentação e testes automatizados básicos.
+O projeto possui a estrutura inicial do aplicativo Flutter e uma prova de conceito de gerenciamento reativo de estado utilizando Flutter Signals.
 
-A execução do frontend já foi validada no navegador Google Chrome. A validação em dispositivo Android permanece pendente.
+A demonstração implementada utiliza `signal`, `computed` e `SignalBuilder` em uma tela de contador, com operações de incremento, decremento e zeragem.
+
+Os testes automatizados estão passando: cinco testes unitários do controller e quatro testes de widget. A análise estática (`flutter analyze`) também foi concluída sem problemas.
+
+A execução da aplicação foi validada visual e funcionalmente no Google Chrome. A validação em dispositivo Android permanece pendente.
 
 As funcionalidades de gerenciamento de filas, autenticação, backend, banco de dados e comunicação em tempo real estão planejadas para as próximas etapas.
 
@@ -65,7 +69,7 @@ O administrador também poderá atuar como atendente.
 
 ## Regras de negócio definidas para o MVP
 
-As seguintes regras orientam a implementação do sistema:
+As seguintes regras orientam a implementação do sistema.
 
 ### Funcionamento da fila
 
@@ -150,9 +154,17 @@ Essas funcionalidades poderão ser avaliadas em versões futuras.
 | `signals` | Gerenciamento reativo de estado |
 | `signals_flutter` | Integração dos Signals com widgets Flutter |
 
-Os pacotes `signals` e `signals_flutter` foram adicionados ao projeto, mas o gerenciamento reativo ainda não foi implementado. Os componentes de backend, banco de dados, REST e WebSocket também não estão implementados neste estágio.
+Os pacotes `signals` e `signals_flutter` foram adicionados ao projeto. Existe uma prova de conceito isolada de gerenciamento reativo por Signals, mas o gerenciamento de estado das funcionalidades futuras da fila ainda não foi implementado.
 
-Os pacotes Signals já estão adicionados ao projeto. A implementação do gerenciamento reativo de estado e sua integração com os widgets ainda estão pendentes.
+A demonstração atual utiliza:
+
+- `signal`: criação do estado observável do contador.
+- `computed`: cálculo automático do dobro do contador.
+- `SignalBuilder`: reconstrução reativa da parte da interface que depende dos Signals.
+
+Essa implementação tem finalidade demonstrativa e não representa o gerenciamento global da futura aplicação de filas.
+
+Os componentes de backend, banco de dados, REST e WebSocket ainda não estão implementados.
 
 ### Arquitetura planejada
 
@@ -207,36 +219,47 @@ O backend será a autoridade sobre as regras de negócio e os dados persistidos.
 
 ## Interface atual
 
-A tela inicial implementada apresenta:
+A tela inicial implementada é uma prova de conceito de Flutter Signals:
 
-- Barra superior com o título `Fila de Atendimento`.
-- Mensagem central `Aplicativo em desenvolvimento`.
-- Tema Material 3.
-- Esquema de cores baseado na cor índigo.
+- Barra superior com o título `Demonstração Flutter Signals`.
+- Exibição do valor atual do contador.
+- Exibição do dobro calculado pelo `computed`.
+- Botões para incrementar, decrementar e zerar o contador.
+- Atualização reativa da interface pelo `SignalBuilder`.
+- Tema Material 3 com esquema de cores baseado na cor índigo.
 
-A interface está em fase inicial e será ampliada conforme a implementação das funcionalidades do MVP.
+O contador tem finalidade demonstrativa e não representa uma funcionalidade real da fila de atendimento.
 
 ## Estrutura do projeto
 
-Estrutura inicial gerada pelo Flutter:
+Estrutura atual relacionada à aplicação:
 
 ```text
 .
-├── android/                  # Projeto Android
-├── ios/                      # Projeto iOS
+├── android/                         # Projeto Android
+├── ios/                             # Projeto iOS
 ├── lib/
-│   └── main.dart             # Inicialização e tela inicial
-├── linux/                    # Projeto Linux Desktop
-├── macos/                    # Projeto macOS Desktop
+│   ├── main.dart                    # Inicialização e configuração do aplicativo
+│   └── features/
+│       └── counter/
+│           ├── counter_controller.dart  # Estado e lógica do contador
+│           └── counter_page.dart        # Interface demonstrativa com Signals
+├── linux/                           # Projeto Linux Desktop
+├── macos/                           # Projeto macOS Desktop
 ├── test/
-│   └── widget_test.dart      # Testes da interface
-├── web/                      # Projeto Web
-├── windows/                  # Projeto Windows Desktop
-├── analysis_options.yaml     # Configurações de análise do Dart
-├── pubspec.yaml              # Metadados e dependências
-├── pubspec.lock              # Versões resolvidas das dependências
+│   ├── counter_controller_test.dart # Testes unitários do controller
+│   └── widget_test.dart              # Testes da interface
+├── web/                             # Projeto Web
+├── windows/                         # Projeto Windows Desktop
+├── analysis_options.yaml             # Configurações de análise do Dart
+├── pubspec.yaml                      # Metadados e dependências
+├── pubspec.lock                      # Versões resolvidas das dependências
 └── README.md
 ```
+
+A funcionalidade demonstrativa está organizada no diretório `lib/features/counter/`, separando a lógica do contador (`counter_controller.dart`) da interface (`counter_page.dart`).
+
+Os testes estão separados entre testes unitários do controller e testes de widget da interface.
 
 Conforme a implementação evoluir, novas telas, modelos, serviços e componentes de estado deverão ser organizados em diretórios específicos dentro de `lib/`.
 
@@ -326,7 +349,13 @@ flutter analyze
 flutter test
 ```
 
-### Executar somente o teste de widget
+### Executar somente os testes do controller
+
+```bash
+flutter test test/counter_controller_test.dart
+```
+
+### Executar somente os testes de widget
 
 ```bash
 flutter test test/widget_test.dart
@@ -335,8 +364,25 @@ flutter test test/widget_test.dart
 ### Executar um teste pelo nome
 
 ```bash
-flutter test test/widget_test.dart --plain-name "exibe a tela inicial"
+flutter test test/widget_test.dart --plain-name "exibe o estado inicial da demonstração"
 ```
+
+Os testes atuais contemplam:
+
+**Testes unitários do controller:**
+
+- Inicialização do contador em zero.
+- Incremento do contador.
+- Decremento do contador.
+- Zeragem do contador.
+- Atualização automática do valor computado.
+
+**Testes de widget:**
+
+- Exibição do estado inicial da demonstração.
+- Incremento do contador e atualização do dobro.
+- Decremento do contador e atualização do dobro.
+- Zeragem do contador e do valor computado.
 
 Toda nova funcionalidade deverá possuir testes adequados ao comportamento implementado.
 
