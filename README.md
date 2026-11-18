@@ -10,11 +10,11 @@ O objetivo é oferecer uma solução simples para clientes entrarem em uma fila 
 
 O projeto possui a estrutura inicial do aplicativo Flutter e uma prova de conceito de gerenciamento reativo de estado utilizando Flutter Signals.
 
-O primeiro controller de estado da fila acompanha localmente o status e a posição ilustrativa de um ticket. Ele mantém `ticketStatus`, `ticketPosition` e o indicador derivado `isMyTurn`, mas ainda não está integrado à interface nem conectado ao backend.
+O primeiro controller de estado da fila acompanha localmente o status e a posição ilustrativa de um ticket. Ele mantém `ticketStatus`, `ticketPosition` e o indicador derivado `isMyTurn`. Sua demonstração foi integrada à interface Flutter, mas o estado continua local e não está conectado ao backend.
 
-A demonstração implementada utiliza `signal`, `computed` e `SignalBuilder` em uma tela de contador, com operações de incremento, decremento e zeragem.
+A demonstração utiliza `signal`, `computed` e `SignalBuilder` em uma única tela, preservando o contador e acrescentando controles locais para demonstrar o status e a posição de um ticket.
 
-Os testes automatizados estão passando: dez testes unitários (cinco do CounterController e cinco do QueueController) e quatro testes de widget. A análise estática (`flutter analyze`) também foi concluída sem problemas.
+Os testes automatizados estão passando: dez testes unitários (cinco do CounterController e cinco do QueueController) e sete testes de widget. A análise estática (`flutter analyze`) também foi concluída sem problemas.
 
 A execução da aplicação foi validada visual e funcionalmente no Google Chrome. A validação em dispositivo Android permanece pendente.
 
@@ -156,13 +156,13 @@ Essas funcionalidades poderão ser avaliadas em versões futuras.
 | `signals` | Gerenciamento reativo de estado |
 | `signals_flutter` | Integração dos Signals com widgets Flutter |
 
-Os pacotes `signals` e `signals_flutter` foram adicionados ao projeto. Existe uma prova de conceito isolada de gerenciamento reativo por Signals, mas o gerenciamento de estado das funcionalidades futuras da fila ainda não foi implementado.
+Os pacotes `signals` e `signals_flutter` foram adicionados ao projeto. A interface atual demonstra o estado reativo do contador e o primeiro estado local do ticket; o gerenciamento completo das funcionalidades futuras da fila ainda não foi implementado.
 
 A demonstração atual utiliza:
 
-- `signal`: criação do estado observável do contador.
-- `computed`: cálculo automático do dobro do contador.
-- `SignalBuilder`: reconstrução reativa da parte da interface que depende dos Signals.
+- `signal`: criação do estado observável do contador e do ticket.
+- `computed`: cálculo automático do dobro do contador e indicação derivada da vez do ticket.
+- `SignalBuilder`: reconstrução reativa das áreas da interface que dependem dos Signals e da área demonstrativa do ticket.
 
 Essa implementação tem finalidade demonstrativa e não representa o gerenciamento global da futura aplicação de filas.
 
