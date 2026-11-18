@@ -10,9 +10,11 @@ O objetivo é oferecer uma solução simples para clientes entrarem em uma fila 
 
 O projeto possui a estrutura inicial do aplicativo Flutter e uma prova de conceito de gerenciamento reativo de estado utilizando Flutter Signals.
 
+O primeiro controller de estado da fila acompanha localmente o status e a posição ilustrativa de um ticket. Ele mantém `ticketStatus`, `ticketPosition` e o indicador derivado `isMyTurn`, mas ainda não está integrado à interface nem conectado ao backend.
+
 A demonstração implementada utiliza `signal`, `computed` e `SignalBuilder` em uma tela de contador, com operações de incremento, decremento e zeragem.
 
-Os testes automatizados estão passando: cinco testes unitários do controller e quatro testes de widget. A análise estática (`flutter analyze`) também foi concluída sem problemas.
+Os testes automatizados estão passando: dez testes unitários (cinco do CounterController e cinco do QueueController) e quatro testes de widget. A análise estática (`flutter analyze`) também foi concluída sem problemas.
 
 A execução da aplicação foi validada visual e funcionalmente no Google Chrome. A validação em dispositivo Android permanece pendente.
 
