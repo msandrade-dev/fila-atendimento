@@ -12,9 +12,19 @@ O projeto possui a estrutura inicial do aplicativo Flutter e uma prova de concei
 
 O primeiro controller de estado da fila acompanha localmente o status e a posição ilustrativa de um ticket. Ele mantém `ticketStatus`, `ticketPosition` e o indicador derivado `isMyTurn`. Sua demonstração foi integrada à interface Flutter, mas o estado continua local e não está conectado ao backend.
 
-A tela inicial (`HomePage`) apresenta o nome e uma breve descrição do aplicativo. Ela permite acessar a demonstração (`CounterPage`) por meio de `Navigator.push` e `MaterialPageRoute`, enquanto o retorno utiliza a navegação padrão do Flutter. A demonstração preserva o Contador e Meu ticket, com estado local e demonstrativo do ticket, sem integração com backend.
+A tela inicial (`HomePage`) apresenta o nome e uma breve descrição do aplicativo e oferece o botão "Acompanhar meu ticket". Esse botão abre a `QueuePage` por meio de `Navigator.push` e `MaterialPageRoute`. O retorno à tela inicial utiliza a navegação padrão do Flutter.
 
-Os testes automatizados estão passando: dez testes unitários (cinco do CounterController e cinco do QueueController), nove testes de widget e 19 testes aprovados no total. A análise estática (`flutter analyze`) também foi concluída sem problemas.
+A `QueuePage` apresenta:
+
+- Status inicial `WAITING` do ticket.
+- Posição inicial ilustrativa na fila.
+- Indicador derivado `isMyTurn`.
+- Controles locais identificados como demonstrativos para status e posição.
+- Atualização reativa da interface pelo `SignalBuilder`.
+
+Os dados do ticket são locais e demonstrativos. O estado não está integrado ao backend.
+
+Os testes automatizados confirmam cinco testes unitários do `QueueController` e sete testes de widget, totalizando 12 testes. A análise estática (`flutter analyze`) foi concluída sem problemas.
 
 A execução da aplicação foi validada visual e funcionalmente no Google Chrome. A validação em dispositivo Android permanece pendente.
 
@@ -158,13 +168,13 @@ Essas funcionalidades poderão ser avaliadas em versões futuras.
 
 Tema Material 3 com esquema de cores baseado na cor índigo.
 
-Os pacotes `signals` e `signals_flutter` foram adicionados ao projeto. A interface atual demonstra o estado reativo do contador e o primeiro estado local do ticket; o gerenciamento completo das funcionalidades futuras da fila ainda não foi implementado.
+Os pacotes `signals` e `signals_flutter` continuam ativos para o estado reativo da fila. A interface atual demonstra localmente status, posição e indicação derivada da vez do ticket.
 
-A demonstração atual utiliza:
+A implementação atual utiliza:
 
-- `signal`: criação do estado observável do contador e do ticket.
-- `computed`: cálculo automático do dobro do contador e indicação derivada da vez do ticket.
-- `SignalBuilder`: reconstrução reativa das áreas da interface que dependem dos Signals e da área demonstrativa do ticket.
+- `signal`: criação do estado observável do ticket.
+- `computed`: indicação derivada da vez do usuário.
+- `SignalBuilder`: reconstrução reativa da interface de acompanhamento do ticket.
 
 Essa implementação tem finalidade demonstrativa e não representa o gerenciamento global da futura aplicação de filas.
 
@@ -221,59 +231,36 @@ A arquitetura prevista separa a interface, o gerenciamento de estado, a comunica
 
 O backend será a autoridade sobre as regras de negócio e os dados persistidos. O Signals será responsável pelo estado reativo da interface, não pela garantia de consistência entre diferentes dispositivos.
 
-## Interface atual
+## Estrutura do código
 
-A tela inicial (`HomePage`) apresenta o nome e uma breve descrição do aplicativo e oferece o botão "Acessar demonstração". Esse botão abre a `CounterPage` por meio de `Navigator.push` e `MaterialPageRoute`. O retorno à tela inicial utiliza a navegação padrão do Flutter.
-
-A demonstração preserva:
-
-- Exibição do valor atual do contador e do dobro calculado pelo `computed`.
-- Botões para incrementar, decrementar e zerar o contador.
-- Exibição reativa do status, da posição e do indicador de vez do ticket.
-- Controles locais para simular os status e as posições do ticket.
-- Atualização reativa da interface pelo `SignalBuilder`.
-
-O Contador e Meu ticket têm finalidade demonstrativa. O estado do ticket permanece local e não está integrado ao backend.
-
-## Estrutura do projeto
-
-Estrutura atual relacionada à aplicação:
+A estrutura atual do código fonte é organizada em módulos:
 
 ```text
 .
-├── android/                         # Projeto Android
-├── ios/                             # Projeto iOS
+├── android/                     # Código específico do Android
+├── ios/                         # Código específico do iOS
 ├── lib/
-│   ├── main.dart                    # Inicialização e configuração do aplicativo
+│   ├── main.dart                # Ponto de entrada da aplicação
 │   └── features/
-│       ├── counter/
-│       │   ├── counter_controller.dart  # Estado e lógica do contador
-│       │   └── counter_page.dart        # Interface demonstrativa com Signals
 │       ├── home/
-│       │   └── home_page.dart          # Tela inicial do aplicativo
+│       │   └── home_page.dart
 │       └── queue/
-│           └── queue_controller.dart    # Estado local do ticket
-├── linux/                           # Projeto Linux Desktop
-├── macos/                           # Projeto macOS Desktop
+│           ├── queue_controller.dart
+│           └── queue_page.dart
+├── linux/                       # Projeto Linux Desktop
+├── macos/                       # Projeto macOS Desktop
 ├── test/
-│   ├── counter_controller_test.dart # Testes unitários do controller
-│   ├── queue_controller_test.dart   # Testes unitários do controller da fila
-│   └── widget_test.dart              # Testes da interface
-├── web/                             # Projeto Web
-├── windows/                         # Projeto Windows Desktop
-├── analysis_options.yaml             # Configurações de análise do Dart
-├── pubspec.yaml                      # Metadados e dependências
-├── pubspec.lock                      # Versões resolvidas das dependências
+│   ├── queue_controller_test.dart
+│   └── widget_test.dart
+├── web/                         # Projeto Web
+├── windows/                     # Projeto Windows Desktop
+├── analysis_options.yaml
+├── pubspec.yaml
+├── pubspec.lock
 └── README.md
 ```
 
-A funcionalidade demonstrativa está organizada no diretório `lib/features/counter/`, separando a lógica do contador (`counter_controller.dart`) da interface (`counter_page.dart`).
-
-Os testes estão separados entre testes unitários do controller e testes de widget da interface.
-
-Conforme a implementação evoluir, novas telas, modelos, serviços e componentes de estado deverão ser organizados em diretórios específicos dentro de `lib/`.
-
-A estrutura definitiva será estabelecida gradualmente, conforme as responsabilidades da aplicação forem implementadas.
+A estrutura final do código será definida conforme a evolução do projeto e a integração com os componentes de backend e banco de dados.
 
 ## Pré-requisitos
 
@@ -359,10 +346,10 @@ flutter analyze
 flutter test
 ```
 
-### Executar somente os testes do controller
+### Executar somente os testes do controller da fila
 
 ```bash
-flutter test test/counter_controller_test.dart
+flutter test test/queue_controller_test.dart
 ```
 
 ### Executar somente os testes de widget
@@ -374,28 +361,30 @@ flutter test test/widget_test.dart
 ### Executar um teste pelo nome
 
 ```bash
-flutter test test/widget_test.dart --plain-name "exibe o estado inicial da demonstração"
+flutter test test/widget_test.dart --plain-name "exibe a tela inicial do aplicativo"
 ```
 
 Os testes atuais contemplam:
 
-**Testes unitários do controller:**
+**Testes unitários do QueueController:**
 
-- Inicialização do contador em zero.
-- Incremento do contador.
-- Decremento do contador.
-- Zeragem do contador.
-- Atualização automática do valor computado.
+- Inicialização do status em `WAITING` e da posição em `3`.
+- Inicialização de `isMyTurn` em `false`.
+- Atualização automática de `isMyTurn` para `true` com `CALLED`.
+- Retorno de `isMyTurn` para `false` em outros status.
+- Atualização independente da posição do ticket.
 
 **Testes de widget:**
 
-- Exibição da tela inicial e seus elementos.
-- Navegação para a demonstração e retorno à tela inicial.
-- Exibição do estado inicial da demonstração.
-- Incremento do contador e atualização do dobro.
-- Decremento do contador e atualização do dobro.
-- Zeragem do contador e do valor computado.
-- Alterações reativas de status e posição do ticket.
+- Exibição da tela inicial e identificação do aplicativo.
+- Navegação da `HomePage` para a `QueuePage` e retorno à tela inicial.
+- Exibição inicial do status, da posição e do indicador de vez.
+- Alteração do status para `CALLED`.
+- Alteração do status para `IN_SERVICE`.
+- Alteração da posição do ticket.
+- Retorno visual do status para `WAITING`.
+
+O projeto possui 5 testes unitários do `QueueController` e 7 testes de widget, totalizando 12 testes.
 
 Toda nova funcionalidade deverá possuir testes adequados ao comportamento implementado.
 
@@ -437,6 +426,8 @@ As principais áreas previstas são:
 Essa organização deverá permitir testar e evoluir cada componente sem criar acoplamento excessivo entre interface e infraestrutura.
 
 ## Fluxos conceituais do sistema
+
+Os fluxos abaixo são planejados e não representam funcionalidades já implementadas no aplicativo atual.
 
 ### Fluxo básico do cliente
 
@@ -489,7 +480,7 @@ Sistema atualiza a fila
 - Preservar o uso de Material 3.
 - Manter as mensagens da interface em português.
 - Utilizar imports por pacote nos testes, como `package:fila_atendimento/...`.
-- Organizar novas telas e componentes em arquivos próprios dentro de `lib/`.
+- Organizar novas telas e componentes em arquivos próprios dentro de `lib/features/`.
 - Adicionar testes para comportamentos visíveis e regras importantes.
 - Não versionar diretórios de build, caches ou artefatos gerados.
 - Não implementar regras de negócio críticas exclusivamente no frontend.
@@ -507,6 +498,7 @@ Antes de enviar alterações, execute:
 ```bash
 flutter analyze
 flutter test
+git diff --check
 ```
 
 Recomenda-se desenvolver novas funcionalidades em branches específicas:
@@ -515,11 +507,40 @@ Recomenda-se desenvolver novas funcionalidades em branches específicas:
 git switch -c feature/nome-da-funcionalidade
 ```
 
-Adicionar e registrar as alterações:
+Revise cuidadosamente os arquivos modificados antes de adicionar alterações ao staging:
 
 ```bash
-git add .
+git status
+git diff
+```
+
+As operações de staging, commit e push são realizadas manualmente pelo responsável pelo projeto, somente após a revisão das alterações. O Copilot não deve executar essas operações.
+
+Adicione somente os arquivos revisados ao staging:
+
+```bash
+git add caminho/do/arquivo
+```
+
+Confira exatamente o que será incluído no commit:
+
+```bash
+git status
+git diff --cached
+git diff --cached --check
+```
+
+Após a revisão, registre o commit:
+
+```bash
 git commit -m "Descrição breve da alteração"
+```
+
+Confira o resultado:
+
+```bash
+git status
+git log -1 --oneline
 ```
 
 Enviar a branch para o GitHub:

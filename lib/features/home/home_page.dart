@@ -1,4 +1,4 @@
-import 'package:fila_atendimento/features/counter/counter_page.dart';
+import 'package:fila_atendimento/features/queue/queue_page.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatelessWidget {
@@ -27,22 +27,22 @@ class HomePage extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
                   const Text(
-                    'Acompanhe filas e demonstrações reativas de atendimento.',
+                    'Acompanhe o status e a posição do seu ticket de atendimento.',
                     key: Key('app-description'),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 32),
                   FilledButton.icon(
-                    key: const Key('open-demo-button'),
+                    key: const Key('open-queue-button'),
                     onPressed: () {
                       Navigator.of(context).push(
                         MaterialPageRoute<void>(
-                          builder: (context) => const CounterPage(),
+                          builder: (context) => const QueuePage(),
                         ),
                       );
                     },
-                    icon: const Icon(Icons.science_outlined),
-                    label: const Text('Acessar demonstração'),
+                    icon: const Icon(Icons.confirmation_number_outlined),
+                    label: const Text('Acompanhar meu ticket'),
                   ),
                 ],
               ),
