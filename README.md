@@ -12,9 +12,9 @@ O projeto possui a estrutura inicial do aplicativo Flutter e uma prova de concei
 
 O primeiro controller de estado da fila acompanha localmente o status e a posição ilustrativa de um ticket. Ele mantém `ticketStatus`, `ticketPosition` e o indicador derivado `isMyTurn`. Sua demonstração foi integrada à interface Flutter, mas o estado continua local e não está conectado ao backend.
 
-A demonstração utiliza `signal`, `computed` e `SignalBuilder` em uma única tela, preservando o contador e acrescentando controles locais para demonstrar o status e a posição de um ticket.
+A tela inicial (`HomePage`) apresenta o nome e uma breve descrição do aplicativo. Ela permite acessar a demonstração (`CounterPage`) por meio de `Navigator.push` e `MaterialPageRoute`, enquanto o retorno utiliza a navegação padrão do Flutter. A demonstração preserva o Contador e Meu ticket, com estado local e demonstrativo do ticket, sem integração com backend.
 
-Os testes automatizados estão passando: dez testes unitários (cinco do CounterController e cinco do QueueController) e sete testes de widget. A análise estática (`flutter analyze`) também foi concluída sem problemas.
+Os testes automatizados estão passando: dez testes unitários (cinco do CounterController e cinco do QueueController), nove testes de widget e 19 testes aprovados no total. A análise estática (`flutter analyze`) também foi concluída sem problemas.
 
 A execução da aplicação foi validada visual e funcionalmente no Google Chrome. A validação em dispositivo Android permanece pendente.
 
@@ -156,6 +156,8 @@ Essas funcionalidades poderão ser avaliadas em versões futuras.
 | `signals` | Gerenciamento reativo de estado |
 | `signals_flutter` | Integração dos Signals com widgets Flutter |
 
+Tema Material 3 com esquema de cores baseado na cor índigo.
+
 Os pacotes `signals` e `signals_flutter` foram adicionados ao projeto. A interface atual demonstra o estado reativo do contador e o primeiro estado local do ticket; o gerenciamento completo das funcionalidades futuras da fila ainda não foi implementado.
 
 A demonstração atual utiliza:
@@ -221,16 +223,17 @@ O backend será a autoridade sobre as regras de negócio e os dados persistidos.
 
 ## Interface atual
 
-A tela inicial implementada é uma prova de conceito de Flutter Signals:
+A tela inicial (`HomePage`) apresenta o nome e uma breve descrição do aplicativo e oferece o botão "Acessar demonstração". Esse botão abre a `CounterPage` por meio de `Navigator.push` e `MaterialPageRoute`. O retorno à tela inicial utiliza a navegação padrão do Flutter.
 
-- Barra superior com o título `Demonstração Flutter Signals`.
-- Exibição do valor atual do contador.
-- Exibição do dobro calculado pelo `computed`.
+A demonstração preserva:
+
+- Exibição do valor atual do contador e do dobro calculado pelo `computed`.
 - Botões para incrementar, decrementar e zerar o contador.
+- Exibição reativa do status, da posição e do indicador de vez do ticket.
+- Controles locais para simular os status e as posições do ticket.
 - Atualização reativa da interface pelo `SignalBuilder`.
-- Tema Material 3 com esquema de cores baseado na cor índigo.
 
-O contador tem finalidade demonstrativa e não representa uma funcionalidade real da fila de atendimento.
+O Contador e Meu ticket têm finalidade demonstrativa. O estado do ticket permanece local e não está integrado ao backend.
 
 ## Estrutura do projeto
 
@@ -243,13 +246,18 @@ Estrutura atual relacionada à aplicação:
 ├── lib/
 │   ├── main.dart                    # Inicialização e configuração do aplicativo
 │   └── features/
-│       └── counter/
-│           ├── counter_controller.dart  # Estado e lógica do contador
-│           └── counter_page.dart        # Interface demonstrativa com Signals
+│       ├── counter/
+│       │   ├── counter_controller.dart  # Estado e lógica do contador
+│       │   └── counter_page.dart        # Interface demonstrativa com Signals
+│       ├── home/
+│       │   └── home_page.dart          # Tela inicial do aplicativo
+│       └── queue/
+│           └── queue_controller.dart    # Estado local do ticket
 ├── linux/                           # Projeto Linux Desktop
 ├── macos/                           # Projeto macOS Desktop
 ├── test/
 │   ├── counter_controller_test.dart # Testes unitários do controller
+│   ├── queue_controller_test.dart   # Testes unitários do controller da fila
 │   └── widget_test.dart              # Testes da interface
 ├── web/                             # Projeto Web
 ├── windows/                         # Projeto Windows Desktop
@@ -381,10 +389,13 @@ Os testes atuais contemplam:
 
 **Testes de widget:**
 
+- Exibição da tela inicial e seus elementos.
+- Navegação para a demonstração e retorno à tela inicial.
 - Exibição do estado inicial da demonstração.
 - Incremento do contador e atualização do dobro.
 - Decremento do contador e atualização do dobro.
 - Zeragem do contador e do valor computado.
+- Alterações reativas de status e posição do ticket.
 
 Toda nova funcionalidade deverá possuir testes adequados ao comportamento implementado.
 

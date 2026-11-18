@@ -1,4 +1,4 @@
-import 'package:fila_atendimento/features/counter/counter_page.dart';
+import 'package:fila_atendimento/features/home/home_page.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -32,7 +32,7 @@ class FilaAtendimentoApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigo),
         useMaterial3: true,
       ),
-      home: const CounterPage(),
+      home: const HomePage(),
     );
   }
 }
