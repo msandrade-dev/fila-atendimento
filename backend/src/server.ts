@@ -5,6 +5,8 @@ import { buildApp } from './app.js';
 import { loadConfig } from './config/env.js';
 import { runMigrations } from './database/migrations.js';
 import { checkDatabase, createDatabasePool } from './database/pool.js';
+import { QueueRepository } from './modules/queues/repository.js';
+import { QueueService } from './modules/queues/service.js';
 
 type Signal = 'SIGINT' | 'SIGTERM';
 type SignalListener = () => void | Promise<void>;
@@ -97,6 +99,7 @@ export async function startServer(
     app = buildApp({
       checkDatabase: () => checkDatabase(databasePool),
       closeDatabase: () => databasePool.end().then(() => undefined),
+      queueService: new QueueService(new QueueRepository(databasePool)),
     });
 
     unregisterShutdownHandlers = registerShutdownHandlers(app);

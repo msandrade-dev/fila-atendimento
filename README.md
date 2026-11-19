@@ -178,8 +178,9 @@ A implementação atual utiliza:
 
 Essa implementação tem finalidade demonstrativa e não representa o gerenciamento global da futura aplicação de filas.
 
-A infraestrutura inicial do backend, PostgreSQL e API REST está implementada. Os CRUDs
-de filas e tickets, autenticação e WebSocket ainda não fazem parte desta etapa.
+A infraestrutura inicial do backend, PostgreSQL e API REST está implementada. O CRUD
+de filas está disponível; tickets, autenticação e WebSocket ainda não fazem parte
+desta etapa.
 
 ### Backend local
 
@@ -199,27 +200,66 @@ npm run dev
 ```
 
 O arquivo `backend/.env` é local e ignorado pelo Git. O PostgreSQL utiliza o volume
-Docker `fila_atendimento_postgres_data`, e a migração inicial cria somente a tabela
-`schema_migrations`.
+Docker `fila_atendimento_postgres_data`. As migrações criam `schema_migrations` e a
+tabela `queues`; nenhuma tabela de tickets é criada nesta etapa.
 
 Scripts principais do backend:
 
 ```bash
 npm test
+npm run test:integration
 npm run lint
 npm run typecheck
 npm run build
 npm start
 ```
 
+O teste de integração usa exclusivamente `TEST_DATABASE_URL` e não faz fallback
+para `DATABASE_URL`. Crie previamente um banco isolado com nome terminado em
+`_test` (por exemplo, `fila_atendimento_test`) e configure a variável localmente:
+
+```bash
+export TEST_DATABASE_URL=postgresql://<usuario>:<senha>@localhost:5432/fila_atendimento_test
+cd backend
+npm run test:integration
+```
+
+Sem `TEST_DATABASE_URL`, o teste é ignorado com uma justificativa explícita. O
+teste remove somente a fila criada por ele e nunca executa `DROP DATABASE`,
+`DROP SCHEMA` ou limpeza de dados preexistentes.
+
 Endpoints disponíveis:
 
 - `GET /`: identificação básica do serviço.
 - `GET /health`: verifica se o processo está respondendo.
 - `GET /health/ready`: verifica efetivamente a conexão com PostgreSQL.
+- `POST /queues`: cria uma fila.
+- `GET /queues`: lista filas por data de criação decrescente.
+- `GET /queues/:id`: consulta uma fila por UUID.
+- `PATCH /queues/:id`: atualiza `name`, `description` e/ou `status`.
+- `DELETE /queues/:id`: exclui uma fila sem tickets relacionados.
 
-A API escuta por padrão em `http://localhost:3000`. O prefixo reservado para futuras
-rotas de domínio é `/api/v1`; Filas e Tickets ainda não possuem endpoints.
+Uma fila possui `id`, `name`, `description`, `status`, `createdAt` e `updatedAt`.
+Os status possíveis são `ACTIVE` e `INACTIVE`; o padrão é `ACTIVE`. O nome é
+obrigatório, aparado nas extremidades e não pode ser vazio.
+
+Exemplo de criação:
+
+```http
+POST /queues
+Content-Type: application/json
+
+{"name":"Recepção","description":"Atendimento geral"}
+```
+
+As respostas de entrada inválida usam HTTP `400`, filas inexistentes usam `404`,
+tentativas de exclusão impedidas por tickets usam `409` e falhas inesperadas usam
+`500`, sem expor detalhes do PostgreSQL.
+
+A API escuta por padrão em `http://localhost:3000`. As rotas atuais usam `/queues`;
+`/api/v1` permanece reservado para a futura organização versionada da API. Quando a
+tabela de tickets for implementada, ela deverá referenciar `queues(id)` com
+`ON DELETE RESTRICT`.
 
 No emulador Android, `localhost` aponta para o próprio emulador. Para acessar o
 computador hospedeiro, use `http://10.0.2.2:3000` no emulador Android padrão. Em um

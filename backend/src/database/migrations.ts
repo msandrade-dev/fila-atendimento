@@ -14,6 +14,13 @@ const migrations: Migration[] = [
       'utf8',
     ),
   },
+  {
+    version: '002_create_queues',
+    sql: readFileSync(
+      new URL('../../migrations/002_create_queues.sql', import.meta.url),
+      'utf8',
+    ),
+  },
 ] as const;
 
 const MIGRATION_LOCK_KEY = 719_384_271;

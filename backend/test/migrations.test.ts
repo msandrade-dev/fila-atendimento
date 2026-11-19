@@ -164,6 +164,8 @@ test('a migração inicial cria a tabela de controle', async () => {
     true,
   );
   assert.equal(client.appliedVersions.has('001_schema_migrations'), true);
-  assert.equal(client.releaseCalls, 1);
+  assert.equal(client.appliedVersions.has('002_create_queues'), true);
+  assert.equal(client.releaseCalls, 2);
   assert.equal(client.releaseErrors[0], undefined);
+  assert.equal(client.releaseErrors[1], undefined);
 });
