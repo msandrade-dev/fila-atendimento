@@ -178,7 +178,56 @@ A implementação atual utiliza:
 
 Essa implementação tem finalidade demonstrativa e não representa o gerenciamento global da futura aplicação de filas.
 
-Os componentes de backend, banco de dados, REST e WebSocket ainda não estão implementados.
+A infraestrutura inicial do backend, PostgreSQL e API REST está implementada. Os CRUDs
+de filas e tickets, autenticação e WebSocket ainda não fazem parte desta etapa.
+
+### Backend local
+
+O backend fica isolado em `backend/` e utiliza Node.js, TypeScript, Fastify e o cliente
+PostgreSQL `pg`. A API não altera o aplicativo Flutter nesta etapa.
+
+Pré-requisitos: Node.js 20 ou superior, npm, Docker e Docker Compose.
+
+Para configurar e iniciar o ambiente local:
+
+```bash
+cp .env.example backend/.env
+docker compose up -d postgres
+cd backend
+npm install
+npm run dev
+```
+
+O arquivo `backend/.env` é local e ignorado pelo Git. O PostgreSQL utiliza o volume
+Docker `fila_atendimento_postgres_data`, e a migração inicial cria somente a tabela
+`schema_migrations`.
+
+Scripts principais do backend:
+
+```bash
+npm test
+npm run lint
+npm run typecheck
+npm run build
+npm start
+```
+
+Endpoints disponíveis:
+
+- `GET /`: identificação básica do serviço.
+- `GET /health`: verifica se o processo está respondendo.
+- `GET /health/ready`: verifica efetivamente a conexão com PostgreSQL.
+
+A API escuta por padrão em `http://localhost:3000`. O prefixo reservado para futuras
+rotas de domínio é `/api/v1`; Filas e Tickets ainda não possuem endpoints.
+
+No emulador Android, `localhost` aponta para o próprio emulador. Para acessar o
+computador hospedeiro, use `http://10.0.2.2:3000` no emulador Android padrão. Em um
+dispositivo físico, use o endereço IP do computador na rede local, com a porta `3000`.
+
+Para parar o banco sem remover dados, execute `docker compose stop postgres`. Para
+encerrar os recursos do Compose preservando o volume, execute `docker compose down`;
+não use `docker compose down -v` neste ambiente.
 
 ### Arquitetura planejada
 
@@ -238,6 +287,10 @@ A estrutura atual do código fonte é organizada em módulos:
 ```text
 .
 ├── android/                     # Código específico do Android
+├── backend/                     # API Node.js, banco e testes do backend
+│   ├── migrations/              # Migrações versionadas
+│   ├── src/                     # Aplicação, configuração e banco
+│   └── test/                    # Testes automatizados da API
 ├── ios/                         # Código específico do iOS
 ├── lib/
 │   ├── main.dart                # Ponto de entrada da aplicação
