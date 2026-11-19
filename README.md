@@ -24,7 +24,7 @@ A `QueuePage` apresenta:
 
 Os dados do ticket são locais e demonstrativos. O estado não está integrado ao backend.
 
-Os testes automatizados confirmam cinco testes unitários do `QueueController` e sete testes de widget, totalizando 12 testes. A análise estática (`flutter analyze`) foi concluída sem problemas.
+Os testes automatizados confirmam cinco testes unitários do `QueueController` e nove testes de widget, totalizando 14 testes. A análise estática (`flutter analyze`) foi concluída sem problemas.
 
 A execução da aplicação foi validada visual e funcionalmente no Google Chrome. A validação em dispositivo Android permanece pendente.
 

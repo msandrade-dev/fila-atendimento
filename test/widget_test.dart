@@ -106,6 +106,60 @@ void main() {
     );
   });
 
+  testWidgets('preserva o status CALLED ao atualizar a posição',
+      (tester) async {
+    await pumpAppAndOpenQueue(tester);
+
+    await tester.ensureVisible(find.byKey(const Key('called-button')));
+    await tester.tap(find.byKey(const Key('called-button')));
+    await tester.pump();
+
+    expect(find.text('É a sua vez'), findsOneWidget);
+
+    await tester.ensureVisible(find.byKey(const Key('position-five-button')));
+    await tester.tap(find.byKey(const Key('position-five-button')));
+    await tester.pump();
+
+    expect(
+      tester.widget<Text>(find.byKey(const Key('ticket-position'))).data,
+      'Posição: 5',
+    );
+    expect(
+      tester.widget<Text>(find.byKey(const Key('ticket-status'))).data,
+      'Status: CALLED',
+    );
+    expect(find.text('É a sua vez'), findsOneWidget);
+  });
+
+  testWidgets('atualiza a posição para 5 e depois para 3', (tester) async {
+    await pumpAppAndOpenQueue(tester);
+
+    await tester.ensureVisible(find.byKey(const Key('position-five-button')));
+    await tester.tap(find.byKey(const Key('position-five-button')));
+    await tester.pump();
+
+    expect(
+      tester.widget<Text>(find.byKey(const Key('ticket-position'))).data,
+      'Posição: 5',
+    );
+    expect(
+      tester.widget<Text>(find.byKey(const Key('ticket-status'))).data,
+      'Status: WAITING',
+    );
+
+    await tester.tap(find.byKey(const Key('position-three-button')));
+    await tester.pump();
+
+    expect(
+      tester.widget<Text>(find.byKey(const Key('ticket-position'))).data,
+      'Posição: 3',
+    );
+    expect(
+      tester.widget<Text>(find.byKey(const Key('ticket-status'))).data,
+      'Status: WAITING',
+    );
+  });
+
   testWidgets('retorna o status para WAITING', (tester) async {
     await pumpAppAndOpenQueue(tester);
 
